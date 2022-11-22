@@ -73,7 +73,8 @@ class Sensores:
         except Exception as e:
             print(e)
         finally:
-            GPIO.cleanup()
+            print("")
+            #GPIO.cleanup()
                 
     def getTemperatureData():
         try:
@@ -96,15 +97,16 @@ class Sensores:
                 print("Error from server: " + str(r.content))'''
 
         except RuntimeError as error:
-            self.dhtDevice.exit()
+            #self.dhtDevice.exit()
             print(error.args[0])
                 #time.sleep(2.0)
                 #continue
         except Exception as error: 
-            self.dhtDevice.exit()
+            #self.dhtDevice.exit()
             raise error
         
     def cleanup(self):
+        self.dhtDevice.exit()
         GPIO.output( self.in1, GPIO.LOW )
         GPIO.output( self.in2, GPIO.LOW )
         GPIO.output( self.in3, GPIO.LOW )
@@ -131,7 +133,7 @@ class Sensores:
             self.cleanup()
             exit( 1 )
             
-        self.cleanup()
+        #self.cleanup()
         exit( 0 )
             
         

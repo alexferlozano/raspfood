@@ -6,9 +6,9 @@ import RPi.GPIO as GPIO
 
 
 s = Sensores(23,24,26,19,13,6, True)
-s.moverMotor()
 s.getUltraData()
-#s.getTemperatureData()
+s.getTemperatureData()
+s.moverMotor()
 
 #GPIO.setmode(GPIO.BCM)
 #motor = Motor(26,19,13,6, True)
