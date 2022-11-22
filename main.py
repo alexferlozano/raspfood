@@ -9,6 +9,7 @@ s = Sensores(23,24,26,19,13,6, True)
 s.getUltraData()
 s.getTemperatureData()
 s.moverMotor()
+s.cleanup()
 
 #GPIO.setmode(GPIO.BCM)
 #motor = Motor(26,19,13,6, True)
