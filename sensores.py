@@ -95,14 +95,14 @@ class Sensores:
             else:
                 print("Error from server: " + str(r.content))'''
 
-            except RuntimeError as error:
-                self.dhtDevice.exit()
-                print(error.args[0])
+        except RuntimeError as error:
+            self.dhtDevice.exit()
+            print(error.args[0])
                 #time.sleep(2.0)
                 #continue
-            except Exception as error:
-                self.dhtDevice.exit()
-                raise error
+        except Exception as error: 
+            self.dhtDevice.exit()
+            raise error
         
     def cleanup(self):
         GPIO.output( self.in1, GPIO.LOW )
