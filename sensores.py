@@ -17,7 +17,7 @@ class Sensores:
         self.in4 = in4
         self.step_sleep = 0.002
         self.dhtDevice = adafruit_dht.DHT11(board.D18)
-        self.step_count = 4096 # 5.625*(1/64) por paso, 4096 pasos corresponden a 360°
+        self.step_count = 2048 # 5.625*(1/64) por paso, 4096 pasos corresponden a 360°
         self.direction = direction # True para el sentido del reloj, False para el sentido contrario
         self.step_sequence = [[1,0,0,1],
                              [1,0,0,0],
