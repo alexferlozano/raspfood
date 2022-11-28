@@ -103,7 +103,8 @@ class Sensores:
                 #continue
         except Exception as error: 
             self.dhtDevice.exit()
-            raise error
+            #print(error.args[0])
+            #raise error
         
     def cleanup(self):
         #self.dhtDevice.exit()

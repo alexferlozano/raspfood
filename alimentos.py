@@ -1,6 +1,3 @@
-'''from testMotor import *
-from testTemperature import *
-from test import *'''
 from sensores import *
 import RPi.GPIO as GPIO
 import socketio
@@ -15,7 +12,7 @@ s = Sensores(23,24,26,19,13,6, True)
 while True:
     s.getUltraData()
     s.getTemperatureData()
-    time.sleep(5)
+    time.sleep(2)
 #s.moverMotor()
 
 '''sio = socketio.Client()
