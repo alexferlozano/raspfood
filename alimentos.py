@@ -7,39 +7,14 @@ import requests
 import time
 
 url = "https://alimdogandcat.space"
-s = Sensores(23,24,26,19,13,6, True)
+s = Sensores(23,24,16,20)
 
 while True:
-    s.getUltraData()
-    s.getTemperatureData()
-    time.sleep(2)
-#s.moverMotor()
+    s.getUltraDataWater()
+    #s.getUltraData()
+    #s.getTemperatureData()
+    time.sleep(60)
 
-'''sio = socketio.Client()
-
-@sio.event
-def connect():
-    print('connection established')
-Afullbufferwasnotreturned.Tryagain.
-@sio.event
-def my_message(data):
-    print('message received with ', data)
-    sio.emit('my response', {'response': 'my response'})
-
-
-@sio.on('Motor')
-def onMotor():
-    print('esta puta mierda ya jaló')
-    s.moverMotor()
-
-@sio.event
-def disconnect():
-    print('disconnected from server')
-
-#sio.connect("ws://alimdogandcat.space/raspberry")
-#sio.connect('http://127.0.0.1:3333')
-sio.connect('https://alimdogandcat.space')
-sio.wait()'''
 
 #GPIO.setmode(GPIO.BCM)
 #motor = Motor(26,19,13,6, True)

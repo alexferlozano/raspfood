@@ -12,6 +12,7 @@ import time
 url = "https://alimdogandcat.space"
 s = Sensores(23,24,26,19,13,6, True)
 
+
 while True:
     s.getUltraData()
     s.getTemperatureData()
@@ -23,7 +24,7 @@ while True:
 @sio.event
 def connect():
     print('connection established')
-Afullbufferwasnotreturned.Tryagain.
+    
 @sio.event
 def my_message(data):
     print('message received with ', data)
@@ -43,6 +44,7 @@ def disconnect():
 #sio.connect('http://127.0.0.1:3333')
 sio.connect('https://alimdogandcat.space')
 sio.wait()'''
+
 
 #GPIO.setmode(GPIO.BCM)
 #motor = Motor(26,19,13,6, True)

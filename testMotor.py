@@ -9,7 +9,7 @@ class Motor:
         self.in3 = in3
         self.in4 = in4
         self.step_sleep = 0.002
-        self.step_count = 4096 # 5.625*(1/64) por paso, 4096 pasos corresponden a 360°
+        self.step_count = 2048 
         self.direction = direction # True para el sentido del reloj, False para el sentido contrario
         self.step_sequence = [[1,0,0,1],
                              [1,0,0,0],
@@ -49,8 +49,8 @@ class Motor:
                     self.motor_step_counter = (self.motor_step_counter - 1) % 8
                 elif self.direction==False:
                     self.motor_step_counter = (self.motor_step_counter + 1) % 8
-                else: # Programación defensiva
-                    print( "No debería llegar a este punto por que la dirección siempre es verdadera o falsa" )
+                else: # Programacion defensiva
+                    print( "No deberia llegar a este punto por que la direccion siempre es verdadera o falsa" )
                     self.cleanup()
                     exit( 1 )
                 time.sleep( self.step_sleep )
@@ -59,9 +59,9 @@ class Motor:
             self.cleanup()
             exit( 1 )
          
-        self.cleanup()
+        #self.cleanup()
         exit( 0 )
         
 
-motor = Motor(26,19,13,6, True)        
-motor.girarMotor()
+#motor = Motor(26,19,13,6, True)        
+#motor.girarMotor()

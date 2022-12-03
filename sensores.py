@@ -6,40 +6,27 @@ import board
 import adafruit_dht
 from datetime import datetime
 
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, token):
+        self.token = token
+    def __call__(self, r):
+        r.headers["authorization"] = "Bearer " + self.token
+        return r
+    
 
 class Sensores:
-    def __init__(self, echo, trigger, in1, in2, in3, in4, direction):
+    def __init__(self, echo, trigger, echo2, trigger2):
         self.echo = echo
         self.trigger = trigger
-        self.in1 = in1
-        self.in2 = in2
-        self.in3 = in3
-        self.in4 = in4
-        self.step_sleep = 0.002
-        self.dhtDevice = adafruit_dht.DHT11(board.D18)
-        self.step_count = 2048 # 5.625*(1/64) por paso, 4096 pasos corresponden a 360°
-        self.direction = direction # True para el sentido del reloj, False para el sentido contrario
-        self.step_sequence = [[1,0,0,1],
-                             [1,0,0,0],
-                             [1,1,0,0],
-                             [0,1,0,0],
-                             [0,1,1,0],
-                             [0,0,1,0],
-                             [0,0,1,1],
-                             [0,0,0,1]]
+        self.echo2 = echo2
+        self.trigger2 = trigger2
+        self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjMsImlhdCI6MTY2OTk1MzI1OH0.Y4T64-aZz18raBAtD6kGx6pdfH4ptQh_EeWmgDxgLdA'
+        #self.dhtDevice = adafruit_dht.DHT11(board.D18)
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.echo, GPIO.IN)
         GPIO.setup(self.trigger, GPIO.OUT)
-        GPIO.setup( self.in1, GPIO.OUT )
-        GPIO.setup( self.in2, GPIO.OUT )
-        GPIO.setup( self.in3, GPIO.OUT )
-        GPIO.setup( self.in4, GPIO.OUT )
-        GPIO.output( self.in1, GPIO.LOW )
-        GPIO.output( self.in2, GPIO.LOW )
-        GPIO.output( self.in3, GPIO.LOW )
-        GPIO.output( self.in4, GPIO.LOW )
-        self.motor_pins = [self.in1,self.in2,self.in3,self.in4]
-        self.motor_step_counter = 0 ;
+        GPIO.setup(self.echo2, GPIO.IN)
+        GPIO.setup(self.trigger2, GPIO.OUT)
         
     def getUltraData(self):
         try:
@@ -61,14 +48,15 @@ class Sensores:
             print("Measured distance: %.1f cm" % abs(distance))
             print("--------------------------")
             now = datetime.now()
-            '''data = {'value_int':1, 'value_float': abs(distance), 'value_string':'null', 'date':now.isoformat(), 'raspberry_sensor_id': '1'}
-            r = requests.post('https://alimdogandcat.space/SensorValues/Create', json=data, auth=BearerAuth('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTY2NzU4ODQ0MH0.2fTbZWJTcDwvibU9nPefDFq8LSdQjMDXx4OxUbOpCwY'))
+            data = {'value_int':1, 'value_float': abs(distance), 'value_string':'null', 'date':now.isoformat(), 'raspberry_sensor_id': '1'}
+            r = requests.post('https://alimdogandcat.space/SensorValues/Create', json=data, auth=BearerAuth(self.token))
             #post = r.json()
             if r.status_code == 200:
                 rp = r.json()
                 print(rp)
             else:
-                print("Error from server: " + str(r.content))'''
+                print("Error from server: " + str(r.content))
+            return
             #time.sleep(3)
         except Exception as e:
             print(e)
@@ -76,7 +64,7 @@ class Sensores:
             print("")
             #GPIO.cleanup()
                 
-    def getTemperatureData(self):
+    '''def getTemperatureData(self):
         try:
             temperature_c = self.dhtDevice.temperature
             temperature_f = temperature_c * (9 / 5) + 32
@@ -87,54 +75,66 @@ class Sensores:
                 )
             )
             now = datetime.now()
-            '''data = {'value_int':1, 'value_float': temperature_c, 'value_string':'null', 'date':now.isoformat(), 'raspberry_sensor_id': '2'}
-            r = requests.post('https://alimdogandcat.space/SensorValues/Create', json=data, auth=BearerAuth('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTY2NzU4ODQ0MH0.2fTbZWJTcDwvibU9nPefDFq8LSdQjMDXx4OxUbOpCwY'))
+            data = {'value_int':1, 'value_float': temperature_c, 'value_string':'null', 'date':now.isoformat(), 'raspberry_sensor_id': '3'}
+            r = requests.post('https://alimdogandcat.space/SensorValues/Create', json=data, auth=BearerAuth(self.token))
             #post = r.json()
             if r.status_code == 200:
                 rp = r.json()
                 print(rp)
             else:
-                print("Error from server: " + str(r.content))'''
+                print("Error from server: " + str(r.content))
+                
+            dataTem = {'value_int':1, 'value_float': humidity, 'value_string':'null', 'date':now.isoformat(), 'raspberry_sensor_id': '5'}
+            r = requests.post('https://alimdogandcat.space/SensorValues/Create', json=dataTem, auth=BearerAuth(self.token))
+            #post = r.json()
+            if r.status_code == 200:
+                rp = r.json()
+                print(rp)
+            else:
+                print("Error from server: " + str(r.content))
 
         except RuntimeError as error:
-            self.dhtDevice.exit()
+            #self.dhtDevice.exit()
             print(error.args[0])
                 #time.sleep(2.0)
                 #continue
         except Exception as error: 
-            self.dhtDevice.exit()
-            #print(error.args[0])
-            #raise error
-        
-    def cleanup(self):
-        #self.dhtDevice.exit()
-        GPIO.output( self.in1, GPIO.LOW )
-        GPIO.output( self.in2, GPIO.LOW )
-        GPIO.output( self.in3, GPIO.LOW )
-        GPIO.output( self.in4, GPIO.LOW )
-        GPIO.cleanup()
-    
-    def moverMotor(self):
+            #self.dhtDevice.exit()
+            print(error.args[0])
+            #raise error'''
+            
+    def getUltraDataWater(self):
         try:
-            i = 0
-            for i in range(self.step_count):
-                for pin in range(0, len(self.motor_pins)):
-                    GPIO.output( self.motor_pins[pin], self.step_sequence[self.motor_step_counter][pin] )
-                if self.direction==True:
-                    self.motor_step_counter = (self.motor_step_counter - 1) % 8
-                elif self.direction==False:
-                    self.motor_step_counter = (self.motor_step_counter + 1) % 8
-                else: # Programación defensiva
-                    print( "No debería llegar a este punto por que la dirección siempre es verdadera o falsa" )
-                    self.cleanup()
-                    exit( 1 )
-                time.sleep( self.step_sleep )
+            GPIO.output(self.trigger2, 1)
+            time.sleep(0.00001)
+            GPIO.output(self.trigger2, 0)
             
-        except KeyboardInterrupt:
-            self.cleanup()
-            exit( 1 )
+            start_time = time.time()
+            end_time = time.time()
             
-        #self.cleanup()
-        exit( 0 )
+            while GPIO.input(self.echo2) == 0:
+                start_time = time.time()
             
-        
+            while GPIO.input(self.echo2) == 1:
+                end_time = time.time()
+            
+            time_elapsed = start_time - end_time
+            distance = (time_elapsed * 34300) / 2
+            print("Measured distance Ultra Data: %.1f cm" % abs(distance))
+            print("--------------------------")
+            now = datetime.now()
+            data = {'value_int':1, 'value_float': abs(distance), 'value_string':'null', 'date':now.isoformat(), 'raspberry_sensor_id': '2'}
+            r = requests.post('https://alimdogandcat.space/SensorValues/Create', json=data, auth=BearerAuth(self.token))
+            #post = r.json()
+            if r.status_code == 200:
+                rp = r.json()
+                print(rp)
+            else:
+                print("Error from server: " + str(r.content))
+            return
+            #time.sleep(3)
+        except Exception as e:
+            print(e)
+        finally:
+            print("")
+            #GPIO.cleanup()
