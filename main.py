@@ -21,6 +21,10 @@ while True:
 
 '''sio = socketio.Client()
 
+crontab -l
+@reboot sleep 120; /usr/bin/python3 /home/wutyfuxx/Desktop/FTP/motorMove.py > /home/wutyfuxx/Desktop/FTP/motor.log
+@reboot sleep 120; /usr/bin/python3 /home/wutyfuxx/Desktop/FTP/alimentos.py > /home/wutyfuxx/Desktop/FTP/sensor.log
+
 @sio.event
 def connect():
     print('connection established')
