@@ -10,9 +10,9 @@ url = "https://alimdogandcat.space"
 s = Sensores(23,24,16,20)
 
 while True:
-    s.getUltraDataWater()
-    #s.getUltraData()
-    #s.getTemperatureData()
+    s.getUltraData()
+    s.getTemperatureData()
+    #s.getUltraDataWater()
     time.sleep(60)
 
 

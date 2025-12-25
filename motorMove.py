@@ -7,7 +7,10 @@ import aiohttp
 import requests
 import time
 
-motor = Motor(26,19,13,6, True)
+GPIO.setmode(GPIO.BCM)
+
+#motor = Motor(26,19,13,6, True)
+#led = Leds(24,13,19)
 #s = Sensores(23,24,26,19,13,6, True)
 sio = socketio.Client()
 
@@ -25,7 +28,28 @@ def my_message(data):
 def onMotor():
     print('esta puta mierda ya funciona')
     #s.moverMotor()
-    motor.girarMotor()
+    print("Girando motor en un sentido")
+    GPIO.setup(6, GPIO.OUT)
+    GPIO.output(6, GPIO.LOW)
+    time.sleep(1)
+    print("Girando motor en sentido contrario")
+    GPIO.output(6, GPIO.HIGH)
+    GPIO.cleanup()
+    GPIO.setmode(GPIO.BCM)
+    #motor.girarMotor()
+
+@sio.on('Pump')
+def onPump():
+    print('ya jalo la puta bomba')
+    GPIO.setup(19, GPIO.OUT)
+    GPIO.output(19, GPIO.LOW)
+    time.sleep(1)
+ 
+    print("Girando motor en sentido contrario")
+    GPIO.output(19, GPIO.HIGH)
+    GPIO.cleanup()
+    GPIO.setmode(GPIO.BCM)
+    
 
 @sio.event
 def disconnect():

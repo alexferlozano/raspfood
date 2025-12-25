@@ -1,8 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-
-class Motor:
+'''class Motor:
     def __init__(self, in1, in2, in3, in4, direction): 
         self.in1 = in1
         self.in2 = in2
@@ -60,8 +59,41 @@ class Motor:
             exit( 1 )
          
         #self.cleanup()
-        exit( 0 )
+        exit( 0 )'''
         
-
+class Leds:
+    def __init__(self, motor, giro, bomba):
+        self.pinMotor = motor
+        #self.pinGiro = giro
+        self.pinBomba = bomba
+        self.espera = 10
+        GPIO.setmode( GPIO.BCM )
+        GPIO.setup( self.pinMotor, GPIO.OUT )
+        #GPIO.setup( self.pinGiro, GPIO.OUT)
+        GPIO.setup( self.pinBomba, GPIO.OUT )
+        GPIO.output(self.pinMotor, GPIO.LOW)
+        #GPIO.output(self.pinGiro, GPIO.LOW)
+        
+    def moveMotor(self, motor):
+        try:
+            if motor == True:
+                GPIO.output(self.pinMotor, GPIO.HIGH)
+                GPIO.output(self.pinGiro, GPIO.HIGH)
+                time.sleep(self.espera)
+                GPIO.output(self.pinMotor, GPIO.LOW)
+                GPIO.output(self.pinGiro, GPIO.LOW)
+            else:
+                GPIO.output(self.pinBomba, GPIO.HIGH)
+                time.sleep(self.espera)
+                GPIO.output(self.pinBomba, GPIO.LOW)
+        except KeyboardInterrupt:
+            self.cleanup()
+            exit( 1 )
+         
+        #self.cleanup()
+        exit( 0 )
+    
+    def cleanup(self):
+        GPIO.cleanup()
 #motor = Motor(26,19,13,6, True)        
 #motor.girarMotor()
